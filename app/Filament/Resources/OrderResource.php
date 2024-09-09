@@ -21,6 +21,10 @@ use Filament\Forms\Get;
 use Filament\Forms\Set;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Columns\SelectColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
@@ -33,6 +37,8 @@ class OrderResource extends Resource
     protected static ?string $model = Order::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+
+    protected static ?int $navigationSort = 5;
 
     public static function form(Form $form): Form
     {
@@ -48,28 +54,28 @@ class OrderResource extends Resource
                             ->required(),
                         Select::make('payment_method')
                             ->options([
-                                'xendit' => 'Xendit',
-                                'cod' => 'Cash on delivery',
+                                'midtrans' => 'Midtrans',
+                                'cod' => 'Cash on Delivery',
                             ])
                             ->required(),
                         Select::make('payment_status')
-                                ->options([
-                                    'pending' => 'Pending',
-                                    'paid' => 'Paid',
-                                    'failed' => 'Failed',
-                                ])
-                                ->default('pending')
-                                ->required(),
+                            ->options([
+                                'pending' => 'Pending',
+                                'paid' => 'Paid',
+                                'failed' => 'Failed',
+                            ])
+                            ->default('pending')
+                            ->required(),
                         ToggleButtons::make('status')
                             ->inline()
                             ->default('new')
+                            ->required()
                             ->options([
                                 'new' => 'New',
                                 'processing' => 'Processing',
                                 'delivered' => 'Delivered',
                                 'cancelled' => 'Cancelled',
                             ])
-                            ->required()
                             ->colors([
                                 'new' => 'info',
                                 'processing' => 'warning',
@@ -77,20 +83,20 @@ class OrderResource extends Resource
                                 'cancelled' => 'danger',
                             ])
                             ->icons([
-                               'new' => 'heroicon-m-sparkles',
+                                'new' => 'heroicon-m-sparkles',
                                 'processing' => 'heroicon-m-arrow-path',
                                 'delivered' => 'heroicon-m-check-badge',
                                 'cancelled' => 'heroicon-m-x-circle',
                             ]),
                         Textarea::make('notes')
-                            ->columnSpanFull(),
+                            ->columnSpanFull()
                     ])->columns(2),
 
-                   Section::make('Order Items')->schema([
-                       Repeater::make('items')
-                           ->relationship()
-                           ->schema([
-                               Select::make('product_id')
+                    Section::make('Order Items')->schema([
+                        Repeater::make('items')
+                            ->relationship()
+                            ->schema([
+                                Select::make('product_id')
                                     ->relationship('product', 'name')
                                     ->searchable()
                                     ->preload()
@@ -99,10 +105,10 @@ class OrderResource extends Resource
                                     ->required()
                                     ->columnSpan(4)
                                     ->reactive()
-                                    ->afterStateUpdated(fn ($state, Set $set) => 
-                                        $set('unit_amount', Product::find($state)?->price ?? 0))
-                                    ->afterStateUpdated(fn ($state, Set $set) => 
-                                        $set('total_amount', Product::find($state)?->price ?? 0)),
+                                    ->afterStateUpdated(fn($state, Set $set) =>
+                                    $set('unit_amount', Product::find($state)?->price ?? 0))
+                                    ->afterStateUpdated(fn($state, Set $set) =>
+                                    $set('total_amount', Product::find($state)?->price ?? 0)),
                                 TextInput::make('quantity')
                                     ->numeric()
                                     ->required()
@@ -110,8 +116,8 @@ class OrderResource extends Resource
                                     ->minValue(1)
                                     ->columnSpan(2)
                                     ->reactive()
-                                    ->afterStateUpdated(fn ($state, Set $set, Get $get) =>
-                                        $set('total_amount', $get('unit_amount') * $state)),
+                                    ->afterStateUpdated(fn($state, Set $set, Get $get) =>
+                                    $set('total_amount', $get('unit_amount') * $state)),
                                 TextInput::make('unit_amount')
                                     ->numeric()
                                     ->required()
@@ -122,27 +128,28 @@ class OrderResource extends Resource
                                     ->numeric()
                                     ->required()
                                     ->columnSpan(3),
-                           ])->columns(12),
 
-                           Placeholder::make('grand_total_placeholder')
-                                ->label('Grand Total')
-                                ->content(function (Get $get, Set $set) {
-                                    $total = 0;
-                                    if(!$repeaters = $get('items')) {
-                                        return $total;
-                                    }
+                            ])->columns(12),
 
-                                    foreach($repeaters as $key => $repeater) {
-                                        $total += $get("items.{$key}.total_amount");
-                                    }
+                        Placeholder::make('grand_total_placeholder')
+                            ->label('Grand Total')
+                            ->content(function (Get $get, Set $set) {
+                                $total = 0;
+                                if (!$repeaters = $get('items')) {
+                                    return $total;
+                                }
 
-                                    $set('grand_total', $total);
-                                    return Number::currency($total, 'IDR');
-                                }),
+                                foreach ($repeaters as $key => $repeater) {
+                                    $total += $get("items.{$key}.total_amount");
+                                }
 
-                            Hidden::make('grand_total')
-                                ->default(0),
-                   ])
+                                $set('grand_total', $total);
+                                return Number::currency($total, 'IDR');
+                            }),
+
+                        Hidden::make('grand_total')
+                            ->default(0),
+                    ])
                 ])->columnSpanFull()
             ]);
     }
@@ -165,9 +172,6 @@ class OrderResource extends Resource
                 TextColumn::make('payment_status')
                     ->searchable()
                     ->sortable(),
-                TextColumn::make('shipping_method')
-                    ->searchable()
-                    ->sortable(),
                 SelectColumn::make('status')
                     ->options([
                         'new' => 'New',
@@ -188,7 +192,11 @@ class OrderResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                ActionGroup::make([
+                    ViewAction::make(),
+                    EditAction::make(),
+                    DeleteAction::make(),
+                ])
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -204,11 +212,22 @@ class OrderResource extends Resource
         ];
     }
 
+    public static function getNavigationBadge(): ?string
+    {
+        return static::getModel()::count();
+    }
+
+    public static function getNavigationBadgeColor(): string|array|null
+    {
+        return static::getModel()::count() > 10 ? 'danger' : 'success';
+    }
+
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListOrders::route('/'),
             'create' => Pages\CreateOrder::route('/create'),
+            'view' => Pages\ViewOrder::route('/{record}'),
             'edit' => Pages\EditOrder::route('/{record}/edit'),
         ];
     }
