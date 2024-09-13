@@ -2,6 +2,8 @@
 
 namespace App\Livewire;
 
+use App\Models\Brand;
+use App\Models\Category;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 
@@ -11,6 +13,12 @@ class HomePage extends Component
 {
     public function render()
     {
-        return view('livewire.home-page');
+        $categories = Category::query()->where('is_active', 1)->get();
+        $brands = Brand::query()->where('is_active', 1)->get();
+
+        return view('livewire.home-page', [
+            'categories' => $categories,
+            'brands' => $brands
+        ]);
     }
 }
