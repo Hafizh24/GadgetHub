@@ -76,7 +76,7 @@
                             <div class="w-full px-3 mb-6 sm:w-1/2 md:w-1/3" wire:key="{{ $product->id }}">
                                 <div class="border border-gray-300">
                                     <div class="relative bg-gray-200">
-                                        <a href="/products/product_one" class="">
+                                        <a href="/products/{{ $product->slug }}" class="">
                                             <img src="{{ url('storage', $product->images[0] ?? '') }}"
                                                 alt="{{ $product->name }}" class="object-cover w-full h-56 mx-auto ">
                                         </a>
@@ -114,7 +114,6 @@
                     <div class="flex justify-end mt-6">
                         {{ $products->links() }}
                     </div>
-
                 </div>
             </div>
         </div>
