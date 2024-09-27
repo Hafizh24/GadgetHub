@@ -4,7 +4,7 @@
 
             @foreach ($categories as $category)
                 <a class="group flex flex-col bg-white border shadow-sm rounded-xl hover:shadow-md transition"
-                    href="#" wire:key="{{ $category->id }}">
+                    href="/products?selected_categories%5B0%5D={{ $category->id }}" wire:key="{{ $category->id }}">
                     <div class="p-4 md:p-5">
                         <div class="flex justify-between items-center">
                             <div class="flex items-center">

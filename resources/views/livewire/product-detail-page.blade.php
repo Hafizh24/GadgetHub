@@ -62,8 +62,12 @@
                             </div>
                         </div>
                         <div class="flex flex-wrap items-center gap-4">
-                            <button class="w-full p-4 bg-blue-500 rounded-md lg:w-2/5 text-gray-50 hover:bg-blue-600">
-                                Add to cart</button>
+                            <button wire:click="addToCart({{ $product->id }})"
+                                class="w-full p-4 bg-blue-500 rounded-md lg:w-2/5 text-gray-50 hover:bg-blue-600">
+                                <span wire:loading.remove wire:target="addToCart({{ $product->id }})">Add to
+                                    cart</span>
+                                <span wire:loading wire:target="addToCart({{ $product->id }})">Adding...</span>
+                            </button>
                         </div>
                     </div>
                 </div>

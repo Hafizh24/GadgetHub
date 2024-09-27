@@ -2,6 +2,7 @@
 
 use App\Livewire\Auth\LoginPage;
 use App\Livewire\Auth\RegisterPage;
+use App\Livewire\CartPage;
 use App\Livewire\CategoriesPage;
 use App\Livewire\HomePage;
 use App\Livewire\ProductDetailPage;
@@ -12,6 +13,7 @@ Route::get('/', HomePage::class);
 Route::get('/products', ProductsPage::class);
 Route::get('/products/{slug}', ProductDetailPage::class);
 Route::get('/categories', CategoriesPage::class);
+Route::get('/cart', CartPage::class);
 
 
 
