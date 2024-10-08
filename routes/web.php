@@ -19,3 +19,10 @@ Route::get('/cart', CartPage::class);
 
 Route::get('/login', LoginPage::class);
 Route::get('/register', RegisterPage::class);
+
+Route::middleware('auth')->group(function () {
+    Route::get('/logout', function () {
+        auth()->guard()->logout();
+        return redirect('/');
+    });
+});
