@@ -140,4 +140,14 @@ class CartManagement
 
         return $cart_items;
     }
+
+    static public function calculateGrandTotal($items)
+    {
+        return array_sum(array_column($items, 'total_amount'));
+    }
+
+    static public function clearCartItems()
+    {
+        Cookie::queue(Cookie::forget('cart_items'));
+    }
 }
