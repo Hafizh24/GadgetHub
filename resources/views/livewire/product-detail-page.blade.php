@@ -41,7 +41,7 @@
                                 <span>{{ Number::currency($product->price, 'IDR') }}</span>
                             </p>
                             <p class="max-w-md text-gray-700 ">
-                                {{ $product->description }}
+                                {!! Str::markdown($product->description) !!}
                             </p>
                         </div>
                         <div class="w-32 mb-8 ">

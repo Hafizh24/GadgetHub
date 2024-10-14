@@ -11,11 +11,15 @@
 </head>
 
 <body class="bg-slate-200">
-    @livewire('partials.navbar')
+    @if (!request()->routeIs(['checkout', 'success']))
+        @livewire('partials.navbar')
+    @endif
     <main>
         {{ $slot }}
     </main>
-    @livewire('partials.footer')
+    @if (!request()->routeIs(['cart', 'checkout', 'cancelled', 'success']))
+        @livewire('partials.footer')
+    @endif
     @livewireScripts
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <x-livewire-alert::scripts />

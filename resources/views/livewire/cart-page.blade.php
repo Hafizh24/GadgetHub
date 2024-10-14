@@ -42,7 +42,7 @@
                                 </tr>
                             @empty
                                 <td colspan="5" class="text-center py-4 text-4xl font-semibold text-slate-500">No
-                                    items in available in cart</td>
+                                    items available in cart</td>
                             @endforelse
                             <!-- More product rows -->
                         </tbody>
@@ -54,22 +54,21 @@
                     <h2 class="text-lg font-semibold mb-4">Summary</h2>
                     <div class="flex justify-between mb-2">
                         <span>Subtotal</span>
-                        <span>$19.99</span>
+                        <span>{{ Number::currency($grand_total, 'IDR') }}</span>
                     </div>
                     <div class="flex justify-between mb-2">
                         <span>Taxes</span>
                         <span>{{ Number::currency(0, 'IDR') }}</span>
                     </div>
-                    {{-- <div class="flex justify-between mb-2">
-                        <span>Shipping</span>
-                        <span>$0.00</span>
-                    </div> --}}
                     <hr class="my-2">
                     <div class="flex justify-between mb-2">
                         <span class="font-semibold">Total</span>
-                        <span class="font-semibold">$21.98</span>
+                        <span class="font-semibold">{{ Number::currency($grand_total, 'IDR') }}</span>
                     </div>
-                    <button class="bg-blue-500 text-white py-2 px-4 rounded-lg mt-4 w-full">Checkout</button>
+                    @if ($cart_items)
+                        <a href="/checkout"
+                            class="bg-blue-500 block text-center text-white py-2 px-4 rounded-lg mt-4 w-full">Checkout</a>
+                    @endif
                 </div>
             </div>
         </div>
