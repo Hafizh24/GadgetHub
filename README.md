@@ -22,7 +22,6 @@ GadgetHub is a modern, full-featured e-commerce platform built with Laravel 11, 
 *   **Admin Panel**: [Filament 3](https://filamentphp.com/)
 *   **Database**: PostgreSQL / MySQL
 *   **Payments**: [Stripe](https://stripe.com/)
-*   **Asset Bundling**: [Vite](https://vitejs.dev/)
 
 ## 📦 Installation
 

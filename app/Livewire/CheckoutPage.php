@@ -3,10 +3,8 @@
 namespace App\Livewire;
 
 use App\Helpers\CartManagement;
-use App\Mail\OrderPlaced;
 use App\Models\Order;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Stripe\Checkout\Session;
 use Stripe\Stripe;

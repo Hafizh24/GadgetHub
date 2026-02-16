@@ -3,9 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\ProductResource\Pages;
-use App\Filament\Resources\ProductResource\RelationManagers;
 use App\Models\Product;
-use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Group;
 use Filament\Forms\Components\MarkdownEditor;
@@ -25,8 +23,6 @@ use Filament\Tables\Columns\IconColumn;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Filters\SelectFilter;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 
 class ProductResource extends Resource
@@ -46,8 +42,8 @@ class ProductResource extends Resource
                                 ->required()
                                 ->maxLength(255)
                                 ->live(onBlur: true)
-                                ->afterStateUpdated(fn (string $operation, $state, Set $set) =>
-                                    $operation === 'create' ? $set('slug', Str::slug($state)) : null),
+                                ->afterStateUpdated(fn(string $operation, $state, Set $set) =>
+                                $operation === 'create' ? $set('slug', Str::slug($state)) : null),
                             TextInput::make('slug')
                                 ->required()
                                 ->maxLength(255)
@@ -58,7 +54,7 @@ class ProductResource extends Resource
                                 ->columnSpanFull()
                                 ->fileAttachmentsDirectory('products'),
                         ])->columns(2),
-                    
+
                     Section::make('Images')
                         ->schema([
                             FileUpload::make('images')
@@ -68,7 +64,7 @@ class ProductResource extends Resource
                                 ->reorderable()
                         ])
                 ])->columnSpan(2),
-                
+
                 Group::make()
                     ->schema([
                         Section::make('Price')
@@ -78,7 +74,7 @@ class ProductResource extends Resource
                                     ->numeric()
                                     ->prefix('IDR')
                             ]),
-                        
+
                         Section::make('Associations')
                             ->schema([
                                 Select::make('category_id')
@@ -95,16 +91,16 @@ class ProductResource extends Resource
                             ->schema([
                                 Toggle::make('is_active')
                                     ->required()
-                                    ->default(true),    
+                                    ->default(true),
                                 Toggle::make('in_stock')
                                     ->required()
-                                    ->default(true), 
+                                    ->default(true),
                                 Toggle::make('is_featured')
                                     ->required(),
                             ])
 
                     ])->columnSpan(1)
-                
+
             ])->columns(3);
     }
 
