@@ -3,9 +3,7 @@
 namespace App\Filament\Resources;
 
 use App\Filament\Resources\BrandResource\Pages;
-use App\Filament\Resources\BrandResource\RelationManagers;
 use App\Models\Brand;
-use Filament\Forms;
 use Filament\Forms\Components\FileUpload;
 use Filament\Forms\Components\Grid;
 use Filament\Forms\Components\Section;
@@ -19,8 +17,6 @@ use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Str;
 
 class BrandResource extends Resource
@@ -40,8 +36,8 @@ class BrandResource extends Resource
                                 ->required()
                                 ->maxLength(255)
                                 ->live(onBlur: true)
-                                ->afterStateUpdated(fn (string $operation, $state, Set $set) =>
-                                    $operation === 'create' ? $set('slug', Str::slug($state)) : null),
+                                ->afterStateUpdated(fn(string $operation, $state, Set $set) =>
+                                $operation === 'create' ? $set('slug', Str::slug($state)) : null),
                             TextInput::make('slug')
                                 ->required()
                                 ->maxLength(255)
